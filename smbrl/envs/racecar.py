@@ -503,8 +503,8 @@ class RaceCar(DynamicsModel):
         dx: jnp.ndarray, derivative of x
         """
         delta, d = u[0], u[1]
-        delta = jnp.clip(delta, a_min=-1, a_max=1) * params.steering_limit
-        d = jnp.clip(d, a_min=-1., a_max=1)  # throttle
+        delta = jnp.clip(delta, min=-1, max=1) * params.steering_limit
+        d = jnp.clip(d, min=-1., max=1)  # throttle
         u = u.at[0].set(delta)
         u = u.at[1].set(d)
         dx = self._compute_dx(x, u, params)

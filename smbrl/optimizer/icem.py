@@ -307,7 +307,7 @@ class iCemTO(BaseOptimizer, Generic[DynamicsParams, RewardParams]):
 
             # Add noise, clip to [u_min, u_max], and reshape back
             action_samples = carry.mean + colored_samples * carry.std
-            action_samples = jnp.clip(action_samples, a_max=self.opt_params.u_max, a_min=self.opt_params.u_min)
+            action_samples = jnp.clip(action_samples, min=self.opt_params.u_min, max=self.opt_params.u_max)
             action_samples = jnp.concatenate([action_samples, prev_elites], axis=0)
 
             # Calculate objective for all the samples
@@ -315,7 +315,7 @@ class iCemTO(BaseOptimizer, Generic[DynamicsParams, RewardParams]):
             assert values.shape == (self.opt_params.num_samples + num_prev_elites_per_iter,)
 
             # Prepare indices of elite samples (i.e. samples with the highest reward)
-            best_elite_idx = np.argsort(values, axis=0)[-self.opt_params.num_elites:]
+            best_elite_idx = jnp.argsort(values, axis=0, stable=True)[-self.opt_params.num_elites:]
 
             # Take elite actions and their values
             elites = action_samples[best_elite_idx]

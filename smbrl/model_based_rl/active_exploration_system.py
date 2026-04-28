@@ -47,7 +47,7 @@ class ExplorationDynamics(Dynamics, Generic[ModelState]):
                              aleatoric_std: Float[Array, '... observation_dim']) -> Scalar:
         if self.scale_with_aleatoric_std:
             # sigma^2_ep / sigma^2_al
-            intrinsic_reward = jnp.square(epistemic_std / jnp.clip(aleatoric_std, a_min=1e-4))
+            intrinsic_reward = jnp.square(epistemic_std / jnp.clip(aleatoric_std, min=1e-4))
         else:
             # sigma^2_ep
             intrinsic_reward = jnp.square(epistemic_std)
