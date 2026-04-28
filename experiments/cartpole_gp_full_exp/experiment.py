@@ -267,10 +267,15 @@ def experiment(
                                            outputs=jnp.array([[0., 0., 0., 0., 0.]]))
 
     if log_wandb:
+        import os
+        if os.environ.get('WANDB_PROJECT') is not None:
+            project_name = os.environ.get('WANDB_PROJECT')
+        if os.environ.get('WANDB_ENTITY') is not None:
+            entity_name = os.environ.get('WANDB_ENTITY')
         wandb.init(project=project_name,
                    config=configs,
-                   dir='/cluster/scratch/' + entity_name,
                    entity=entity_name,
+                   dir=logs_dir,
                    )
     agent.run_episodes(num_episodes=10,
                        key=key,

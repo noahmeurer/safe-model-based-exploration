@@ -214,6 +214,11 @@ def experiment(
     )
 
     if log_wandb:
+        import os
+        if os.environ.get('WANDB_PROJECT') is not None:
+            project_name = os.environ.get('WANDB_PROJECT')
+        if os.environ.get('WANDB_ENTITY') is not None:
+            entity_name = os.environ.get('WANDB_ENTITY')
         wandb.init(project=project_name,
                    config=configs,
                    entity=entity_name,
