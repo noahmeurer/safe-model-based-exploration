@@ -21,6 +21,7 @@ def experiment(
         exponent: int = 2,
         lambda_constraint: float = 1e6,
         icem_horizon: int = 20,
+        num_episodes: int = 10,
         episode_length: int = 50,
         action_repeat: int = 2,
         max_abs_velocity: float = 6.0,
@@ -248,7 +249,7 @@ def experiment(
     #    print('model state after update: ', model_state)
 
     env_name = 'pendulum'
-    agent.run_episodes(num_episodes=10,
+    agent.run_episodes(num_episodes=num_episodes,
                        key=key,
                        model_state=model_state,
                        folder_name=f'{logs_dir}/{alg_name}/{env_name}/{exp_hash}/',
@@ -292,6 +293,7 @@ def main(args):
         exponent=args.exponent,
         lambda_constraint=args.lambda_constraint,
         icem_horizon=args.icem_horizon,
+        num_episodes=args.num_episodes,
         episode_length=args.episode_length,
         max_abs_velocity=args.max_abs_velocity,
         num_training_steps=args.num_training_steps,
@@ -326,6 +328,7 @@ if __name__ == '__main__':
     parser.add_argument('--exponent', type=float, default=0.2)
     parser.add_argument('--lambda_constraint', type=float, default=1e6)
     parser.add_argument('--icem_horizon', type=int, default=20)
+    parser.add_argument('--num_episodes', type=int, default=10)
     parser.add_argument('--episode_length', type=int, default=50)
     parser.add_argument('--action_repeat', type=int, default=2)
     parser.add_argument('--max_abs_velocity', type=float, default=6.0)
