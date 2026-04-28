@@ -294,7 +294,9 @@ def main(args):
     import os
     print(args)
     """ generate experiment hash and set up redirect of output streams """
-    exp_hash = hash_dict(args.__dict__)
+    hash_inputs = dict(args.__dict__)
+    hash_inputs["wandb_name"] = os.environ.get("WANDB_NAME") or ""
+    exp_hash = hash_dict(hash_inputs)
     if args.exp_result_folder is not None:
         os.makedirs(args.exp_result_folder, exist_ok=True)
         log_file_path = os.path.join(args.exp_result_folder, '%s.log ' % exp_hash)

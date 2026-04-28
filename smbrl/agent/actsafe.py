@@ -384,7 +384,7 @@ class SafeModelBasedAgent:
             key, subkey = jr.split(key)
             train_model = train_model or episode_idx > 0
             print(f'Starting with Episode {episode_idx}')
-            save_agent = episode_idx % self.saving_frequency == 0
+            save_agent = (episode_idx % self.saving_frequency == 0) or (episode_idx == num_episodes - 1)
             model_state, data = self.do_episode(model_state=model_state,
                                                 episode_idx=episode_idx,
                                                 data=data,
