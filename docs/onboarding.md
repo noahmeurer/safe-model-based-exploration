@@ -96,11 +96,11 @@ You can explicitly see the policy execute in the true environment by rendering t
         - The optimizers query this module continuously during planning to obtain predictive mean `mu(s, a)` and variance `sigma(s, a)`.
         - The predictive variance `sigma` provides the "intrinsic reward" signal OPAX uses to drive exploration.
 
-5. **Evaluation:** Zero-Shot Transfer - The goal of OPAX is to train a global dynamics model capable of solving any downstream task without further environment interactions. After the exploration loop completes, you must evaluate the learned model:
+5. **Evaluation:** Zero-Shot Transfer - The goal of OPAX is to train a global dynamics model capable of solving any downstream task without further environment interactions.
 
+    - The online exploration loop periodically runs zero-shot evaluations using `test_a_task`, replacing the intrinsic reward with the downstream task reward.
     - `analysis/several_episodes_in_line_zero_shot.py`:
-        - Run this script to test your trained GP model on a target task (e.g., Pendulum Swing-up).
-        - Freezes the GP, swaps the objective from "maximize uncertainty" to "maximize task reward," and evaluates zero-shot task performance.
+        - Run this script to visualize the zero-shot task performance across episodes by loading the saved `task_outputs.pkl`.
 
     - `smbrl/envs/pendulum.py` & `smbrl/envs/cartpole/rewards.py`:
         - Define specific downstream task rewards (e.g., penalties for pendulum fall) used in evaluation.
