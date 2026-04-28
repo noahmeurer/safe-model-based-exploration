@@ -92,9 +92,13 @@ def experiment(
     num_training_steps = constant_schedule(num_training_steps)
 
     if log_wandb:
+        if os.environ.get('WANDB_PROJECT') is not None:
+            project_name = os.environ.get('WANDB_PROJECT')
+        if os.environ.get('WANDB_ENTITY') is not None:
+            entity_name = os.environ.get('WANDB_ENTITY')
         wandb.init(project=project_name,
                    config=configs,
-                   dir='/cluster/scratch/' + entity_name,
+                   dir=logs_dir,
                    entity=entity_name,
                    )
 
@@ -290,10 +294,11 @@ def experiment(
         model_state.model_state.params = precomputed_kernel_params
         model_state.model_state.data_stats = precomputed_normalization_stats
 
+    env_name = 'racecar'
     agent.run_episodes(num_episodes=10,
                        key=key,
                        model_state=model_state,
-                       folder_name=f'{alg_name}/{exp_hash}/{logs_dir}/',
+                       folder_name=f'{logs_dir}/{alg_name}/{env_name}/{exp_hash}/',
                        data=offline_data,
                        )
 

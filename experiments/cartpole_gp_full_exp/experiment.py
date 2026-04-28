@@ -277,10 +277,11 @@ def experiment(
                    entity=entity_name,
                    dir=logs_dir,
                    )
+    env_name = 'cartpole'
     agent.run_episodes(num_episodes=10,
                        key=key,
                        model_state=model_state,
-                       folder_name=f'{alg_name}/{exp_hash}/{logs_dir}/',
+                       folder_name=f'{logs_dir}/{alg_name}/{env_name}/{exp_hash}/',
                        data=offline_data,
                        )
 

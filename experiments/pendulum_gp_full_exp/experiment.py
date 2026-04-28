@@ -247,10 +247,11 @@ def experiment(
     #     )
     #    print('model state after update: ', model_state)
 
+    env_name = 'pendulum'
     agent.run_episodes(num_episodes=10,
                        key=key,
                        model_state=model_state,
-                       folder_name=f'{logs_dir}/{alg_name}/{exp_hash}/',
+                       folder_name=f'{logs_dir}/{alg_name}/{env_name}/{exp_hash}/',
                        data=offline_data,
                        )
     wandb.finish()
