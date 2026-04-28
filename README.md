@@ -1,5 +1,12 @@
 # Safe model-based exploration
 
+## Running Experiments
+
+**OPAX:**
+```bash
+WANDB_GROUP="opax" WANDB_NAME="opax_<env_name>_seed<seed>_test<test_number>" python experiments/pendulum_gp_full_exp/experiment.py --alg_name OPAX
+```
+
 ## Documentation
 
 - Onboarding and codebase entry points: [`docs/onboarding.md`](docs/onboarding.md)
