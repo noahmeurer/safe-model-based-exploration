@@ -100,6 +100,11 @@ class SafeModelBasedAgent:
                                                    u_dim=self.env.action_size,
                                                    model=self.model,
                                                    )
+        # To get a pure mean dynamics evaluation for OPAX, set beta to 0
+        is_opax = self.icem_params.lambda_constraint == 0.0
+        beta = jnp.zeros_like(model_state.beta) if is_opax else model_state.beta
+        eval_model_state = model_state.replace(beta=beta)
+
         learned_system = ExplorationSystem(
             dynamics=exploration_dynamics,
             reward=task.reward,
@@ -107,14 +112,16 @@ class SafeModelBasedAgent:
         key, subkey = jr.split(key)
 
         if self.optimizer == 'icem':
+            use_optimism = self.use_optimism if not is_opax else False
+            eval_icem_params = self.icem_params._replace(num_particles=1) if is_opax else self.icem_params
             optimizer = iCemTO(
                 horizon=self.icem_horizon,
                 action_dim=self.env.action_size,
                 key=subkey,
-                opt_params=self.icem_params,
+                opt_params=eval_icem_params,
                 system=learned_system,
                 cost_fn=self.cost_fn,
-                use_optimism=self.use_optimism,
+                use_optimism=use_optimism,
                 use_pessimism=self.use_pessimism,
             )
         # elif self.optimizer == 'ipopt':
@@ -132,7 +139,7 @@ class SafeModelBasedAgent:
         key, subkey = jr.split(key)
         optimizer_state = optimizer.init(key=subkey)
 
-        dynamics_params = optimizer_state.system_params.dynamics_params.replace(model_state=model_state)
+        dynamics_params = optimizer_state.system_params.dynamics_params.replace(model_state=eval_model_state)
         system_params = optimizer_state.system_params.replace(dynamics_params=dynamics_params)
         optimizer_state = optimizer_state.replace(system_params=system_params)
 
